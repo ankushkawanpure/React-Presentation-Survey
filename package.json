@@ -1,0 +1,28 @@
+{
+  "name": "live-voting",
+  "version": "0.0.1",
+  "description": "Online voting survery",
+  "main": "app-server.js",
+  "dependencies": {
+    "babel-core": "^6.11.4",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.11.1",
+    "babel-preset-stage-0": "^6.5.0",
+    "bootstrap": "^3.3.7",
+    "express": "^4.14.0",
+    "react": "^15.3.0",
+    "react-dom": "^15.3.0",
+    "react-router": "^2.6.1",
+    "socket.io": "^1.4.8",
+    "socket.io-client": "^1.4.8",
+    "webpack": "^1.13.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "prestart": "webpack",
+    "start": "node app-server.js"
+  },
+  "author": "Ankush Kawanpure",
+  "license": "MIT"
+}
