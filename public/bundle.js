@@ -52,7 +52,6 @@
 	var ReactRouter = __webpack_require__(175);
 	var Router = ReactRouter.Router;
 	var Route = ReactRouter.Route;
-	var Link = ReactRouter.Link;
 
 	var IndexRoute = ReactRouter.IndexRoute;
 
@@ -61,10 +60,7 @@
 	var Audience = __webpack_require__(290);
 	var Speaker = __webpack_require__(291);
 	var Board = __webpack_require__(292);
-
-	// Router.run(routes, function (Handler) {
-	//     ReactDOM.render(<Handler />, document.getElementById('react-container'));
-	// });
+	var NotFound404 = __webpack_require__(293);
 
 	ReactDOM.render(React.createElement(
 	    Router,
@@ -74,13 +70,10 @@
 	        { path: '/', component: APP },
 	        React.createElement(IndexRoute, { component: Audience }),
 	        React.createElement(Route, { path: 'speaker', component: Speaker }),
-	        React.createElement(Route, { path: 'board', component: Board })
+	        React.createElement(Route, { path: 'board', component: Board }),
+	        React.createElement(Route, { path: '*', component: NotFound404 })
 	    )
 	), document.getElementById('react-container'));
-
-	// ReactDOM.render((
-	//
-	// ), document.body);
 
 /***/ },
 /* 1 */
@@ -27071,6 +27064,8 @@
 
 	'use strict';
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var React = __webpack_require__(1);
 	var Router = __webpack_require__(175);
 
@@ -27085,6 +27080,7 @@
 	        return {
 	            status: 'disconnected',
 	            title: ''
+
 	        };
 	    },
 	    componentWillMount: function componentWillMount() {
@@ -27106,11 +27102,15 @@
 	        this.setState({ title: serverState.title });
 	    },
 	    render: function render() {
+
+	        //var childrenWithProps = React.cloneElement(this.props.children, {title: this.state.title, status: this.state.status});
+	        var childrenWithProps = React.cloneElement(this.props.children, _extends({}, this.state));
+
 	        return React.createElement(
 	            'div',
 	            null,
 	            React.createElement(Header, { title: this.state.title, status: this.state.status }),
-	            this.props.children
+	            childrenWithProps
 	        );
 	    }
 	});
@@ -34793,7 +34793,9 @@
 	        return React.createElement(
 	            'h1',
 	            null,
-	            ' Audience '
+	            ' Audience : ',
+	            this.props.title,
+	            ' '
 	        );
 	    }
 	});
@@ -34814,7 +34816,9 @@
 	        return React.createElement(
 	            'h1',
 	            null,
-	            ' Speaker '
+	            ' Speaker: ',
+	            this.props.status,
+	            ' '
 	        );
 	    }
 	});
@@ -34835,12 +34839,56 @@
 	        return React.createElement(
 	            'h1',
 	            null,
-	            ' Board '
+	            ' Board : ',
+	            this.props.status,
+	            ' '
 	        );
 	    }
 	});
 
 	module.exports = Board;
+
+/***/ },
+/* 293 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+	var ReactRouter = __webpack_require__(175);
+	var Link = ReactRouter.Link;
+
+	var NotFound404 = React.createClass({
+	    displayName: 'NotFound404',
+	    render: function render() {
+	        return React.createElement(
+	            'div',
+	            { id: 'not-found' },
+	            React.createElement(
+	                'h1',
+	                null,
+	                ' Page Not Found '
+	            ),
+	            React.createElement(
+	                Link,
+	                { to: '/' },
+	                'Join to Audience '
+	            ),
+	            React.createElement(
+	                Link,
+	                { to: '/speaker' },
+	                'Start the presentation '
+	            ),
+	            React.createElement(
+	                Link,
+	                { to: '/board' },
+	                'View the board '
+	            )
+	        );
+	    }
+	});
+
+	module.exports = NotFound404;
 
 /***/ }
 /******/ ]);

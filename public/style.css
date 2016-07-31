@@ -33,3 +33,16 @@ body {
 #connection-status.disconnected {
     background-color: red;
 }
+
+div#not-found a {
+    display: block;
+    clear: both;
+}
+
+div#not-found a,
+form a {
+    position: relative;
+    left: 15px;
+    top: 10px;
+    padding-left: 20px;
+}

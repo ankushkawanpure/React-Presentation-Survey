@@ -4,7 +4,7 @@ var Speaker = React.createClass({
 
     render () {
         return(
-            <h1> Speaker </h1>
+            <h1> Speaker: {this.props.status} </h1>
             
         );
     }
