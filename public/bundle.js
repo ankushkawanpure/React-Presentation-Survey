@@ -58,9 +58,9 @@
 	var APP = __webpack_require__(238);
 
 	var Audience = __webpack_require__(290);
-	var Speaker = __webpack_require__(291);
-	var Board = __webpack_require__(292);
-	var NotFound404 = __webpack_require__(293);
+	var Speaker = __webpack_require__(293);
+	var Board = __webpack_require__(294);
+	var NotFound404 = __webpack_require__(295);
 
 	ReactDOM.render(React.createElement(
 	    Router,
@@ -27079,8 +27079,9 @@
 
 	        return {
 	            status: 'disconnected',
-	            title: ''
-
+	            title: '',
+	            member: {},
+	            audience: []
 	        };
 	    },
 	    componentWillMount: function componentWillMount() {
@@ -27091,8 +27092,18 @@
 	        this.socket.on('disconnect', this.disconnect);
 
 	        this.socket.on('welcome', this.welcome);
+	        this.socket.on('joined', this.joined);
+	        this.socket.on('audience', this.updateAudience);
+	    },
+	    emit: function emit(eventName, payload) {
+	        this.socket.emit(eventName, payload);
 	    },
 	    connect: function connect() {
+	        var member = sessionStorage.member ? JSON.parse(sessionStorage.member) : null;
+
+	        if (member) {
+	            this.emit('join', member);
+	        }
 	        this.setState({ status: 'connected' });
 	    },
 	    disconnect: function disconnect() {
@@ -27101,10 +27112,17 @@
 	    welcome: function welcome(serverState) {
 	        this.setState({ title: serverState.title });
 	    },
+	    joined: function joined(member) {
+	        sessionStorage.member = JSON.stringify(member);
+	        this.setState({ member: member });
+	    },
+	    updateAudience: function updateAudience(newAudience) {
+	        this.setState({ audience: newAudience });
+	    },
 	    render: function render() {
 
 	        //var childrenWithProps = React.cloneElement(this.props.children, {title: this.state.title, status: this.state.status});
-	        var childrenWithProps = React.cloneElement(this.props.children, _extends({}, this.state));
+	        var childrenWithProps = React.cloneElement(this.props.children, _extends({ emit: this.emit }, this.state));
 
 	        return React.createElement(
 	            'div',
@@ -34787,15 +34805,51 @@
 
 	var React = __webpack_require__(1);
 
+	var Display = __webpack_require__(291);
+	var Join = __webpack_require__(292);
+
 	var Audience = React.createClass({
 	    displayName: 'Audience',
 	    render: function render() {
 	        return React.createElement(
-	            'h1',
+	            'div',
 	            null,
-	            ' Audience : ',
-	            this.props.title,
-	            ' '
+	            React.createElement(
+	                Display,
+	                { 'if': this.props.status === 'connected' },
+	                React.createElement(
+	                    Display,
+	                    { 'if': this.props.member.name },
+	                    React.createElement(
+	                        'h2',
+	                        null,
+	                        'Welcome ',
+	                        this.props.member.name
+	                    ),
+	                    React.createElement(
+	                        'p',
+	                        null,
+	                        ' ',
+	                        this.props.audience.length,
+	                        ' Members connected '
+	                    ),
+	                    React.createElement(
+	                        'p',
+	                        null,
+	                        ' Question will appere here '
+	                    )
+	                ),
+	                React.createElement(
+	                    Display,
+	                    { 'if': !this.props.member.name },
+	                    React.createElement(
+	                        'h1',
+	                        null,
+	                        ' Join the session '
+	                    ),
+	                    React.createElement(Join, { emit: this.props.emit })
+	                )
+	            )
 	        );
 	    }
 	});
@@ -34804,6 +34858,70 @@
 
 /***/ },
 /* 291 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	/**
+	 * Created by Ankush on 7/30/16.
+	 */
+
+	var React = __webpack_require__(1);
+
+	var Display = React.createClass({
+	    displayName: 'Display',
+	    render: function render() {
+	        return this.props.if ? React.createElement(
+	            'div',
+	            null,
+	            ' ',
+	            this.props.children
+	        ) : null;
+	    }
+	});
+
+	module.exports = Display;
+
+/***/ },
+/* 292 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	/**
+	 * Created by Ankush on 7/31/16.
+	 */
+	var React = __webpack_require__(1);
+
+	var Join = React.createClass({
+	    displayName: 'Join',
+	    join: function join() {
+	        var memberName = this.refs.name.value;
+	        this.props.emit('join', { name: memberName });
+	    },
+	    render: function render() {
+	        return React.createElement(
+	            'form',
+	            { action: 'javascript:void(0)', onSubmit: this.join },
+	            React.createElement(
+	                'label',
+	                null,
+	                'Name '
+	            ),
+	            React.createElement('input', { ref: 'name', className: 'form-control', placeholder: 'Enter your name...', required: true }),
+	            React.createElement(
+	                'button',
+	                { className: 'btn btn-primary' },
+	                ' Join '
+	            )
+	        );
+	    }
+	});
+
+	module.exports = Join;
+
+/***/ },
+/* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34826,7 +34944,7 @@
 	module.exports = Speaker;
 
 /***/ },
-/* 292 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34849,7 +34967,7 @@
 	module.exports = Board;
 
 /***/ },
-/* 293 */
+/* 295 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
