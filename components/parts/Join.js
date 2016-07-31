@@ -3,6 +3,11 @@
  */
 var React = require('react');
 
+var ReactRouter = require('react-router');
+var Link = ReactRouter.Link;
+
+
+
 var Join = React.createClass({
 
     join() {
@@ -18,6 +23,7 @@ var Join = React.createClass({
                 <input ref = "name" className="form-control" placeholder="Enter your name..." required />
                 <button className="btn btn-primary"> Join </button>
 
+                <Link to="/speaker"> Join as Speaker </Link>
             </form>
         );
     }

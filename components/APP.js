@@ -14,7 +14,8 @@ var APP = React.createClass({
             status: 'disconnected',
             title: '',
             member: {},
-            audience: []
+            audience: [],
+            speaker: ''
         }
     },
 
@@ -22,12 +23,12 @@ var APP = React.createClass({
 
         this.socket = io('http://localhost:3000');
         this.socket.on('connect', this.connect);
-
         this.socket.on('disconnect', this.disconnect);
-
-        this.socket.on('welcome', this.welcome);
+        this.socket.on('welcome', this.updateState);
         this.socket.on('joined', this.joined);
         this.socket.on('audience',this.updateAudience);
+        this.socket.on('start', this.start)
+        this.socket.on('end', this.updateState);
     },
 
 
@@ -39,18 +40,26 @@ var APP = React.createClass({
     connect() {
         var member = (sessionStorage.member) ? JSON.parse(sessionStorage.member): null;
 
-        if(member) {
+        if(member && member.type ==='audience') {
             this.emit('join', member);
+
+        } else if(member && member.type ==='speaker') {
+            this.emit('start', {name : member.name, title: sessionStorage.title});
         }
         this.setState({status : 'connected'});
     },
 
     disconnect() {
-        this.setState({status : 'disconnected'});
+        this.setState({
+            status : 'disconnected',
+            title : 'disconnected',
+            speaker : ''
+        });
+
     },
 
-    welcome(serverState) {
-        this.setState({title: serverState.title});
+    updateState(serverState) {
+        this.setState(serverState);
     },
 
     joined(member) {
@@ -62,6 +71,13 @@ var APP = React.createClass({
         this.setState({audience: newAudience});
     },
 
+    start(presentation) {
+        if(this.state.member.type === 'speaker') {
+            sessionStorage.title = presentation.title;
+        }
+        this.setState(presentation);
+    },
+
     render() {
 
         //var childrenWithProps = React.cloneElement(this.props.children, {title: this.state.title, status: this.state.status});
@@ -70,7 +86,7 @@ var APP = React.createClass({
         return (
 
             <div>
-                <Header title={this.state.title} status = {this.state.status} />
+                <Header {...this.state} />
                 {childrenWithProps}
 
             </div>

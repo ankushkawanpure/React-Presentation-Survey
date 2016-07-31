@@ -6,10 +6,7 @@ var Router = ReactRouter.Router;
 var Route = ReactRouter.Route;
 
 
-
 var IndexRoute =ReactRouter.IndexRoute;
-
-
 
 var APP = require('./components/APP');
 

@@ -9,8 +9,10 @@ app.use(express.static('./node_modules/bootstrap/dist'));
 
 var connections = [];
 var title = 'Untitled Presentation';
-
 var audience =[];
+var speaker = {};//only one speaker so object in place pf array
+
+
 var server = app.listen(3000);
 
 //import
@@ -28,6 +30,12 @@ io.sockets.on('connection', function (socket) {
             audience.splice(audience.indexOf(member),1);
             io.sockets.emit('audience', audience)
             console.log(member.name + " Member left " + audience.length + " Members remain");
+        } else if (this.id === speaker.id) { // Handling leaving a speaker
+            console.log(speaker.name + "Speaker left");
+            speaker = {};
+            title = 'Untitled Presentation';
+            io.sockets.emit('end', {title : title, speaker: ''});
+
         }
 
         connections.splice(connections.indexOf(socket), 1);
@@ -38,7 +46,8 @@ io.sockets.on('connection', function (socket) {
     socket.on('join' , function (payload) {
         var newMember = {
             id : this.id,
-            name : payload.name
+            name : payload.name,
+            type: 'audience'
         };
         //letting user know that he joined
         this.emit('joined', newMember);
@@ -50,8 +59,26 @@ io.sockets.on('connection', function (socket) {
         console.log("Joined: " + payload.name)
 
     });
+    
+    socket.on('start', function (payload) {
+
+        speaker.name = payload.name;
+        speaker.id = this.id;
+        speaker.type = 'speaker';
+
+        title = payload.title;
+        this.emit('joined', speaker);
+
+        io.sockets.emit('start',{title: title, speaker: speaker.name});
+        console.log("Presentation started: %s by %s", title, speaker.name);
+
+
+    });
+    
     socket.emit('welcome', {
-        title: title
+        title: title,
+        audience : audience,
+        speaker :speaker.name
     });
 
     connections.push(socket);
