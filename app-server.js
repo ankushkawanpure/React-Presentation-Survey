@@ -11,6 +11,14 @@ var connections = [];
 var title = 'Untitled Presentation';
 var audience =[];
 var speaker = {};//only one speaker so object in place pf array
+var questions = require('./app-questions');
+var currentQuestion = false;
+var results = {
+    a: 0,
+    b: 0,
+    c: 0,
+    d: 0
+};
 
 
 var server = app.listen(3000);
@@ -59,7 +67,7 @@ io.sockets.on('connection', function (socket) {
         console.log("Joined: " + payload.name)
 
     });
-    
+
     socket.on('start', function (payload) {
 
         speaker.name = payload.name;
@@ -74,11 +82,27 @@ io.sockets.on('connection', function (socket) {
 
 
     });
-    
+
+    socket.on('ask', function (question) {
+        currentQuestion = question;
+        results = {a:0, b:0, c:0 ,d:0}
+        io.sockets.emit('ask', currentQuestion);
+        console.log("question Ask" + question.q);
+    });
+
+    socket.on('answer', function (payload) {
+        results[payload.choice]++;
+        io.sockets.emit('results', results);
+        console.log("Answer : %s  - %j", payload.choice, results)
+    });
+
     socket.emit('welcome', {
         title: title,
         audience : audience,
-        speaker :speaker.name
+        speaker :speaker.name,
+        questions: questions,
+        currentQuestion: currentQuestion,
+        results: results
     });
 
     connections.push(socket);

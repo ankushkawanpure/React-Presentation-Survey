@@ -24,6 +24,7 @@ var Join = React.createClass({
                 <button className="btn btn-primary"> Join </button>
 
                 <Link to="/speaker"> Join as Speaker </Link>
+                <Link to="/board"> Go to the board </Link>
             </form>
         );
     }

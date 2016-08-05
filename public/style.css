@@ -46,3 +46,37 @@ form a {
     top: 10px;
     padding-left: 20px;
 }
+
+
+form button {
+    margin: 1em 0;
+}
+
+form label {
+    font-size: 1.5em;
+    margin: 1em 0 0;
+}
+
+
+
+
+#questions>div>span {
+    padding: .5em;
+    margin: .5em;
+    display: block;
+    cursor: pointer;
+    border: 2px solid green;
+}
+
+#questions>div>span:hover {
+    background-color: yellow;
+}
+
+#currentQuestion button {
+    margin: 2px 0;
+    cursor: pointer;
+}
+
+#currentQuestion button:hover {
+    opacity: 0.9;
+}
