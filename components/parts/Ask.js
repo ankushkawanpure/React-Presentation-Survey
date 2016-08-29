@@ -6,7 +6,7 @@ var Ask = React.createClass({
     getInitialState() {
         return {
             choices: [],
-            answer : undefined,
+            answer : undefined
         }
     },
 
@@ -20,7 +20,7 @@ var Ask = React.createClass({
 
     setUpChoices() {
         var choices = Object.keys(this.props.question);
-        {/*THis create array of question with question and choices we dont need the question so shift */}
+        {/*THis create array of question with question and bulletpoints we dont need the question so shift */}
         choices.shift();
         this.setState({
             choices : choices,
@@ -38,10 +38,9 @@ var Ask = React.createClass({
     },
 
     addChoiceButton(choice, i ) {
-        var buttonTypes = ['primary', 'success', 'warning', 'danger'];
         return (
             <button key={i}
-                    className={"col-xs-12 col-sm-6 btn btn-" + buttonTypes[i]}
+                    className="col-xs-12 col-sm-12 btn btn-primary"
                     onClick = {this.select.bind(null, choice)}>
                 {choice} : {this.props.question[choice]}
 
@@ -51,22 +50,24 @@ var Ask = React.createClass({
 
     render() {
         return (
-            <div id="currentQuestion">
+            <div>
+                <div id = "clientquestion">
+                    <div id = "clientquestionheader">
+                        <h3> {this.props.question.q} </h3>
+                    </div>
 
-                <Display if={this.state.answer}>
-                    <h3> You answered : {this.state.answer} </h3>
-                    <p> {this.props.question[this.state.answer]}</p>
-                </Display>
-                <Display if={!this.state.answer}>
-                    <h2> {this.props.question.q} </h2>
-                    <div className="row">
+                    <div className="line"></div>
+                    <div id = "choices">
                         {this.state.choices.map(this.addChoiceButton)}
                     </div>
 
+                </div>
+                <Display if={this.state.answer}>
+                    <div id="answer">
+                        <h3> You answered : {this.state.answer} </h3>
+                        <p> {this.props.question[this.state.answer]}</p>
+                    </div>
                 </Display>
-
-
-
             </div>
         );
     }

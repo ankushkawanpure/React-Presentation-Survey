@@ -15,11 +15,11 @@ var Header = React.createClass({
     render () {
         return (
             <header className="row">
-                <div className="col-xs-10">
+                <div className="col-xs-12 col-md-10">
                     <h1>{this.props.title}</h1>
-                    <p>{this.props.name}</p>
+                    <h4> By: {this.props.speaker}</h4>
                 </div>
-                <div className="col-xs-2">
+                <div className="col-xs-12 col-md-2">
                     <span id="connection-status" className={this.props.status}> </span>
                 </div>
             </header>

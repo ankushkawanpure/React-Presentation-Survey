@@ -22,7 +22,6 @@ var Join = React.createClass({
                 <label>Name </label>
                 <input ref = "name" className="form-control" placeholder="Enter your name..." required />
                 <button className="btn btn-primary"> Join </button>
-
                 <Link to="/speaker"> Join as Speaker </Link>
                 <Link to="/board"> Go to the board </Link>
             </form>

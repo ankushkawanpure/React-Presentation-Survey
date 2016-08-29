@@ -17,8 +17,11 @@ var APP = React.createClass({
             audience: [],
             speaker: '',
             questions: [],
+            slides: [],
             currentQuestion: false,
+            currentSlide: false,
             results: {}
+
         }
     },
 
@@ -33,6 +36,7 @@ var APP = React.createClass({
         this.socket.on('start', this.start)
         this.socket.on('end', this.updateState);
         this.socket.on('ask', this.ask);
+        this.socket.on('display', this.displaySlide);
         this.socket.on('results', this.updateResult);
 
     },
@@ -89,13 +93,19 @@ var APP = React.createClass({
         this.setState({currentQuestion: question});
     },
 
+    displaySlide(slide) {
+        sessionStorage.answer = '';
+        this.setState({currentSlide : slide});
+    },
+
     updateResult(data) {
         this.setState({results: data});
     },
 
+
+
     render() {
 
-        //var childrenWithProps = React.cloneElement(this.props.children, {title: this.state.title, status: this.state.status});
         var childrenWithProps = React.cloneElement(this.props.children, {emit : this.emit,  ...this.state});
 
         return (

@@ -5,16 +5,79 @@ html {
 }
 
 body {
-    font-family: "Open Sans" ,sans-serif;
-    color: #000000;
+
+    color:#fcfcfc;
+    background: #355664;
+    font-family:"Myriad Pro","Helvetica Neue",Helvetica,Arial,Sans-Serif;
+
+
+    /*color: #000000;*/
     margin-top: 40px;
-    line-height: 16px;
-    font-weight: 400;
-    font-size: 14px;
+    /*line-height: 16px;*/
+
+
+    /*font-weight: 400;*/
+    /*font-size: 14px;*/
 
     width: 100%;
     height: 100%;
 }
+
+h1,h2,h3{
+    font-family:"Myriad Pro","Helvetica Neue",Helvetica,Arial,Sans-Serif;
+    /*text-shadow:0 1px 1px black;*/
+}
+
+h1{
+    /* The logo text */
+    font-size:3.5em;
+    /*padding:0.5em 0 0;*/
+    text-transform:uppercase;
+}
+
+h2{
+    font-size:2.2em;
+    font-weight:normal;
+    text-transform:uppercase;
+}
+
+h3{
+    font-size:2em;
+    font-weight:normal;
+}
+
+.line{
+    display: block;
+    height:2px;
+    background:#24404c;
+    border-bottom:1px solid #416371;
+    overflow:hidden;
+}
+
+
+
+header {
+    background-color:#213E4A;
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
+    border-radius:10px;
+}
+
+#clientquestion .line{
+
+    background:#15242a;
+    border-bottom-color:#204656;
+}
+
+#audiance .line{
+
+    display: block;
+    height : 2px;
+    background:#6B8C89;
+    border-bottom-color:#82ABA7;
+}
+
+
 
 #connection-status {
     height: 35px;
@@ -57,9 +120,6 @@ form label {
     margin: 1em 0 0;
 }
 
-
-
-
 #questions>div>span {
     padding: .5em;
     margin: .5em;
@@ -72,6 +132,20 @@ form label {
     background-color: yellow;
 }
 
+
+
+#slides>div>span {
+    padding: .5em;
+    margin: .5em;
+    display: block;
+    cursor: pointer;
+    border: 2px solid green;
+}
+
+#slides>div>span:hover {
+    background-color: yellow;
+}
+
 #currentQuestion button {
     margin: 2px 0;
     cursor: pointer;
@@ -79,4 +153,131 @@ form label {
 
 #currentQuestion button:hover {
     opacity: 0.9;
+}
+
+#currentSlide li {
+    margin: 2px 0;
+    cursor: pointer;
+}
+
+#currentSlide li:hover {
+    opacity: 0.9;
+}
+
+
+#clientslide .line, #clientquestion .line{
+
+    background:#15242a;
+    border-bottom-color:#204656;
+}
+
+
+#clientslide, #clientquestion{
+    margin-top:3em;
+}
+
+#clientslide {
+    min-height: 400px;
+    display: block;
+    border : 1px solid gray;
+    padding: 0;
+    background: #fafafa;
+    color: #000000;
+}
+
+#clienrslideheader {
+    min-height:100px;
+    display: flex;
+    height :100%;
+    background: -moz-linear-gradient(left, rgba(125,185,232,0) 0%, rgba(124,184,231,0) 1%, rgba(30,87,153,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(left, rgba(125,185,232,0) 0%,rgba(124,184,231,0) 1%,rgba(30,87,153,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right, rgba(125,185,232,0) 0%,rgba(124,184,231,0) 1%,rgba(30,87,153,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+}
+
+#clientslide h3, #clientquestionheader h3{
+
+    margin : auto;
+    text-align:center;
+    align-content:center;
+    justify-content: center;
+    text-shadow:0 1px 1px white;
+}
+
+#bullets {
+    min-height: 300px;
+    height: 100%;
+}
+
+#clientslide ul {
+    padding : 50px;
+    font-size: 1.3em;
+}
+
+#clientquestion {
+
+    background-color:#213E4A;
+    min-height: 400px;
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
+    border-radius:10px;
+}
+
+#clientquestionheader {
+    min-height : 100px;
+    height: 100%;
+    display : flex;
+}
+
+#choices {
+    min-height: 300px;
+    height: 100%;
+    margin: auto;
+    padding: 50px 30px;
+}
+
+#choices button {
+    border-radius: 2px;
+    box-shadow: none;
+    font-size: .875em;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+.btn {
+    background: #21333B;
+}
+
+#choices .btn {
+    background: #69A1BA;
+}
+
+#choices .btn:hover{
+    background: #15242a;
+}
+.audiance {
+    margin-top: 50px;
+
+    background: #507B8F;
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
+    border-radius:10px;
+    padding-bottom: 30px;
+}
+
+.audiance .line {
+    background:#466C7D;
+    border-bottom-color:#4E778A;
+    display: block;
+    height: 2px;
+
+}
+
+#answer {
+    margin-top: 20px;
+
+    background: #355664;
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
+    border-radius:10px;
+    padding: 15px;
 }

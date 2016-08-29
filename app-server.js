@@ -8,11 +8,13 @@ app.use(express.static('./node_modules/bootstrap/dist'));
 
 
 var connections = [];
-var title = 'Untitled Presentation';
+var title = 'Presentation yet to start';
 var audience =[];
 var speaker = {};//only one speaker so object in place pf array
 var questions = require('./app-questions');
+var slides = require('./app-slides');
 var currentQuestion = false;
+var currentSlide = false;
 var results = {
     a: 0,
     b: 0,
@@ -41,7 +43,7 @@ io.sockets.on('connection', function (socket) {
         } else if (this.id === speaker.id) { // Handling leaving a speaker
             console.log(speaker.name + "Speaker left");
             speaker = {};
-            title = 'Untitled Presentation';
+            title = 'Presentation yet to start';
             io.sockets.emit('end', {title : title, speaker: ''});
 
         }
@@ -90,6 +92,12 @@ io.sockets.on('connection', function (socket) {
         console.log("question Ask" + question.q);
     });
 
+    socket.on('display', function (slide) {
+        currentSlide = slide;
+        io.sockets.emit('display', currentSlide);
+        console.log("Slide Displayed" + slide.t);
+    });
+
     socket.on('answer', function (payload) {
         results[payload.choice]++;
         io.sockets.emit('results', results);
@@ -101,7 +109,9 @@ io.sockets.on('connection', function (socket) {
         audience : audience,
         speaker :speaker.name,
         questions: questions,
+        slides: slides,
         currentQuestion: currentQuestion,
+        currentSlide : currentSlide,
         results: results
     });
 

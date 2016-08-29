@@ -58,9 +58,9 @@
 	var APP = __webpack_require__(238);
 
 	var Audience = __webpack_require__(290);
-	var Speaker = __webpack_require__(294);
-	var Board = __webpack_require__(298);
-	var NotFound404 = __webpack_require__(354);
+	var Speaker = __webpack_require__(295);
+	var Board = __webpack_require__(300);
+	var NotFound404 = __webpack_require__(356);
 
 	ReactDOM.render(React.createElement(
 	    Router,
@@ -11821,7 +11821,7 @@
 	    }
 
 	    warnedForNaNValue = true;
-	    process.env.NODE_ENV !== 'production' ? warning(false, '`NaN` is an invalid value for the `%s` stylesheet style property.%s', name, checkRenderMessage(owner)) : void 0;
+	    process.env.NODE_ENV !== 'production' ? warning(false, '`NaN` is an invalid value for the `%s` css style property.%s', name, checkRenderMessage(owner)) : void 0;
 	  };
 
 	  var checkRenderMessage = function (owner) {
@@ -12198,7 +12198,7 @@
 	var styleWarnings = {};
 
 	/**
-	 * Convert a value into the proper stylesheet writable value. The style name `name`
+	 * Convert a value into the proper css writable value. The style name `name`
 	 * should be logical (no hyphens), as specified
 	 * in `CSSProperty.isUnitlessNumber`.
 	 *
@@ -27084,8 +27084,11 @@
 	            audience: [],
 	            speaker: '',
 	            questions: [],
+	            slides: [],
 	            currentQuestion: false,
+	            currentSlide: false,
 	            results: {}
+
 	        };
 	    },
 	    componentWillMount: function componentWillMount() {
@@ -27099,6 +27102,7 @@
 	        this.socket.on('start', this.start);
 	        this.socket.on('end', this.updateState);
 	        this.socket.on('ask', this.ask);
+	        this.socket.on('display', this.displaySlide);
 	        this.socket.on('results', this.updateResult);
 	    },
 	    emit: function emit(eventName, payload) {
@@ -27141,12 +27145,15 @@
 	        sessionStorage.answer = '';
 	        this.setState({ currentQuestion: question });
 	    },
+	    displaySlide: function displaySlide(slide) {
+	        sessionStorage.answer = '';
+	        this.setState({ currentSlide: slide });
+	    },
 	    updateResult: function updateResult(data) {
 	        this.setState({ results: data });
 	    },
 	    render: function render() {
 
-	        //var childrenWithProps = React.cloneElement(this.props.children, {title: this.state.title, status: this.state.status});
 	        var childrenWithProps = React.cloneElement(this.props.children, _extends({ emit: this.emit }, this.state));
 
 	        return React.createElement(
@@ -34800,21 +34807,22 @@
 	            { className: 'row' },
 	            React.createElement(
 	                'div',
-	                { className: 'col-xs-10' },
+	                { className: 'col-xs-12 col-md-10' },
 	                React.createElement(
 	                    'h1',
 	                    null,
 	                    this.props.title
 	                ),
 	                React.createElement(
-	                    'p',
+	                    'h4',
 	                    null,
-	                    this.props.name
+	                    ' By: ',
+	                    this.props.speaker
 	                )
 	            ),
 	            React.createElement(
 	                'div',
-	                { className: 'col-xs-2' },
+	                { className: 'col-xs-12 col-md-2' },
 	                React.createElement(
 	                    'span',
 	                    { id: 'connection-status', className: this.props.status },
@@ -34836,8 +34844,10 @@
 	var React = __webpack_require__(1);
 
 	var Display = __webpack_require__(291);
-	var Join = __webpack_require__(292);
-	var Ask = __webpack_require__(293);
+	var DisplaySlide = __webpack_require__(292);
+
+	var Join = __webpack_require__(293);
+	var Ask = __webpack_require__(294);
 
 	var Audience = React.createClass({
 	    displayName: 'Audience',
@@ -34852,42 +34862,102 @@
 	                    Display,
 	                    { 'if': this.props.member.name },
 	                    React.createElement(
-	                        'h2',
-	                        null,
-	                        'Welcome ',
-	                        this.props.member.name
-	                    ),
-	                    React.createElement(
-	                        Display,
-	                        { 'if': !this.props.currentQuestion },
+	                        'div',
+	                        { className: 'col-md-12 audiance' },
 	                        React.createElement(
-	                            'p',
-	                            null,
-	                            ' ',
-	                            this.props.audience.length,
-	                            ' Members connected '
+	                            'div',
+	                            { className: 'row' },
+	                            React.createElement(
+	                                'h2',
+	                                { className: 'col-xs-12 col-md-12' },
+	                                ' Welcome ',
+	                                this.props.member.name
+	                            ),
+	                            React.createElement(
+	                                'p',
+	                                { className: 'col-xs-12 col-md-12' },
+	                                ' Members connected : ',
+	                                this.props.audience.length,
+	                                ' '
+	                            )
 	                        ),
+	                        React.createElement('div', { className: 'line' }),
 	                        React.createElement(
-	                            'p',
-	                            null,
-	                            ' Question will appere here '
+	                            'div',
+	                            { className: 'row' },
+	                            React.createElement(
+	                                'div',
+	                                { className: 'col-xs-12 col-md-6' },
+	                                React.createElement(
+	                                    Display,
+	                                    { 'if': this.props.currentSlide },
+	                                    React.createElement(DisplaySlide, { slide: this.props.currentSlide, emit: this.props.emit })
+	                                ),
+	                                React.createElement(
+	                                    Display,
+	                                    { 'if': !this.props.currentSlide },
+	                                    React.createElement(
+	                                        'div',
+	                                        { id: 'clientslide' },
+	                                        React.createElement(
+	                                            'div',
+	                                            { id: 'clienrslideheader' },
+	                                            React.createElement(
+	                                                'h3',
+	                                                null,
+	                                                ' Title '
+	                                            )
+	                                        ),
+	                                        React.createElement('div', { className: 'line' }),
+	                                        React.createElement('div', { id: 'bullets' })
+	                                    )
+	                                )
+	                            ),
+	                            React.createElement(
+	                                'div',
+	                                { className: 'col-xs-12 col-md-offset-1 col-md-5' },
+	                                React.createElement(
+	                                    Display,
+	                                    { 'if': this.props.currentQuestion },
+	                                    React.createElement(Ask, { question: this.props.currentQuestion, emit: this.props.emit })
+	                                ),
+	                                React.createElement(
+	                                    Display,
+	                                    { 'if': !this.props.currentQuestion },
+	                                    React.createElement(
+	                                        'div',
+	                                        { id: 'clientquestion' },
+	                                        React.createElement(
+	                                            'div',
+	                                            { id: 'clientquestionheader' },
+	                                            React.createElement(
+	                                                'h3',
+	                                                null,
+	                                                ' Questions '
+	                                            )
+	                                        ),
+	                                        React.createElement('div', { className: 'line' }),
+	                                        React.createElement('div', { id: 'choices' })
+	                                    )
+	                                )
+	                            )
 	                        )
-	                    ),
-	                    React.createElement(
-	                        Display,
-	                        { 'if': this.props.currentQuestion },
-	                        React.createElement(Ask, { question: this.props.currentQuestion, emit: this.props.emit })
 	                    )
 	                ),
 	                React.createElement(
 	                    Display,
 	                    { 'if': !this.props.member.name },
 	                    React.createElement(
-	                        'h1',
-	                        null,
-	                        ' Join the session '
-	                    ),
-	                    React.createElement(Join, { emit: this.props.emit })
+	                        'div',
+	                        { className: 'col-md-12 audiance' },
+	                        React.createElement(
+	                            'h2',
+	                            null,
+	                            ' Join the Presentation '
+	                        ),
+	                        React.createElement('div', { className: 'line' }),
+	                        React.createElement(Join, { emit: this.props.emit })
+	                    )
 	                )
 	            )
 	        );
@@ -34924,6 +34994,74 @@
 
 /***/ },
 /* 292 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+	var Display = __webpack_require__(291);
+
+	var DisplaySlide = React.createClass({
+	    displayName: 'DisplaySlide',
+	    getInitialState: function getInitialState() {
+	        return {
+	            bulletpoints: []
+	        };
+	    },
+	    componentWillMount: function componentWillMount() {
+	        this.setUpChoices();
+	    },
+	    componentWillReceiveProps: function componentWillReceiveProps() {
+	        this.setUpChoices();
+	    },
+	    setUpChoices: function setUpChoices() {
+	        var bulletpoints = Object.keys(this.props.slide);
+	        {/*THis create array of question with title and bulletpoints we dont need the question so shift */}
+	        bulletpoints.shift();
+	        this.setState({
+	            bulletpoints: bulletpoints
+	        });
+	    },
+	    addChoiceButton: function addChoiceButton(choice, i) {
+	        return React.createElement(
+	            'li',
+	            { keys: i,
+	                className: 'col-xs-12 col-sm-12' },
+	            this.props.slide[choice]
+	        );
+	    },
+	    render: function render() {
+	        return React.createElement(
+	            'div',
+	            { id: 'clientslide' },
+	            React.createElement(
+	                'div',
+	                { id: 'clienrslideheader' },
+	                React.createElement(
+	                    'h3',
+	                    null,
+	                    ' ',
+	                    this.props.slide.t,
+	                    ' '
+	                )
+	            ),
+	            React.createElement(
+	                'div',
+	                { id: 'bullets' },
+	                React.createElement(
+	                    'ul',
+	                    null,
+	                    this.state.bulletpoints.map(this.addChoiceButton)
+	                )
+	            )
+	        );
+	    }
+	});
+
+	module.exports = DisplaySlide;
+
+/***/ },
+/* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34974,7 +35112,7 @@
 	module.exports = Join;
 
 /***/ },
-/* 293 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34998,7 +35136,7 @@
 	    },
 	    setUpChoices: function setUpChoices() {
 	        var choices = Object.keys(this.props.question);
-	        {/*THis create array of question with question and choices we dont need the question so shift */}
+	        {/*THis create array of question with question and bulletpoints we dont need the question so shift */}
 	        choices.shift();
 	        this.setState({
 	            choices: choices,
@@ -35014,11 +35152,10 @@
 	        });
 	    },
 	    addChoiceButton: function addChoiceButton(choice, i) {
-	        var buttonTypes = ['primary', 'success', 'warning', 'danger'];
 	        return React.createElement(
 	            'button',
 	            { key: i,
-	                className: "col-xs-12 col-sm-6 btn btn-" + buttonTypes[i],
+	                className: 'col-xs-12 col-sm-12 btn btn-primary',
 	                onClick: this.select.bind(null, choice) },
 	            choice,
 	            ' : ',
@@ -35028,38 +35165,47 @@
 	    render: function render() {
 	        return React.createElement(
 	            'div',
-	            { id: 'currentQuestion' },
+	            null,
 	            React.createElement(
-	                Display,
-	                { 'if': this.state.answer },
+	                'div',
+	                { id: 'clientquestion' },
 	                React.createElement(
-	                    'h3',
-	                    null,
-	                    ' You answered : ',
-	                    this.state.answer,
-	                    ' '
+	                    'div',
+	                    { id: 'clientquestionheader' },
+	                    React.createElement(
+	                        'h3',
+	                        null,
+	                        ' ',
+	                        this.props.question.q,
+	                        ' '
+	                    )
 	                ),
+	                React.createElement('div', { className: 'line' }),
 	                React.createElement(
-	                    'p',
-	                    null,
-	                    ' ',
-	                    this.props.question[this.state.answer]
+	                    'div',
+	                    { id: 'choices' },
+	                    this.state.choices.map(this.addChoiceButton)
 	                )
 	            ),
 	            React.createElement(
 	                Display,
-	                { 'if': !this.state.answer },
-	                React.createElement(
-	                    'h2',
-	                    null,
-	                    ' ',
-	                    this.props.question.q,
-	                    ' '
-	                ),
+	                { 'if': this.state.answer },
 	                React.createElement(
 	                    'div',
-	                    { className: 'row' },
-	                    this.state.choices.map(this.addChoiceButton)
+	                    { id: 'answer' },
+	                    React.createElement(
+	                        'h3',
+	                        null,
+	                        ' You answered : ',
+	                        this.state.answer,
+	                        ' '
+	                    ),
+	                    React.createElement(
+	                        'p',
+	                        null,
+	                        ' ',
+	                        this.props.question[this.state.answer]
+	                    )
 	                )
 	            )
 	        );
@@ -35069,7 +35215,7 @@
 	module.exports = Ask;
 
 /***/ },
-/* 294 */
+/* 295 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35077,9 +35223,10 @@
 	var React = __webpack_require__(1);
 
 	var Display = __webpack_require__(291);
-	var JoinSpeaker = __webpack_require__(295);
-	var Attendance = __webpack_require__(296);
-	var Questions = __webpack_require__(297);
+	var JoinSpeaker = __webpack_require__(296);
+	var Attendance = __webpack_require__(297);
+	var Questions = __webpack_require__(298);
+	var Slides = __webpack_require__(299);
 
 	var Speaker = React.createClass({
 	    displayName: 'Speaker',
@@ -35094,17 +35241,23 @@
 	                    Display,
 	                    { 'if': this.props.member.name && this.props.member.type === 'speaker' },
 	                    React.createElement(Questions, { questions: this.props.questions, emit: this.props.emit }),
+	                    React.createElement(Slides, { slides: this.props.slides, emit: this.props.emit }),
 	                    React.createElement(Attendance, { audience: this.props.audience })
 	                ),
 	                React.createElement(
 	                    Display,
 	                    { 'if': !this.props.member.name },
 	                    React.createElement(
-	                        'h2',
-	                        null,
-	                        ' Start the presentation'
-	                    ),
-	                    React.createElement(JoinSpeaker, { emit: this.props.emit })
+	                        'div',
+	                        { className: 'col-md-12 audiance' },
+	                        React.createElement(
+	                            'h2',
+	                            null,
+	                            ' Start the presentation'
+	                        ),
+	                        React.createElement('div', { className: 'line' }),
+	                        React.createElement(JoinSpeaker, { emit: this.props.emit })
+	                    )
 	                )
 	            )
 	        );
@@ -35114,7 +35267,7 @@
 	module.exports = Speaker;
 
 /***/ },
-/* 295 */
+/* 296 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35124,6 +35277,9 @@
 	 */
 
 	var React = __webpack_require__(1);
+
+	var ReactRouter = __webpack_require__(175);
+	var Link = ReactRouter.Link;
 
 	var JoinSpeaker = React.createClass({
 	    displayName: 'JoinSpeaker',
@@ -35140,19 +35296,29 @@
 	            React.createElement(
 	                'label',
 	                null,
-	                'Name '
-	            ),
-	            React.createElement('input', { ref: 'name', className: 'form-control', placeholder: 'Enter your name...', required: true }),
-	            React.createElement(
-	                'label',
-	                null,
 	                ' Presentation Title '
 	            ),
 	            React.createElement('input', { ref: 'title', className: 'form-control', placeholder: 'Enter Title...', required: true }),
 	            React.createElement(
+	                'label',
+	                null,
+	                ' Your Name '
+	            ),
+	            React.createElement('input', { ref: 'name', className: 'form-control', placeholder: 'Enter your name...', required: true }),
+	            React.createElement(
 	                'button',
 	                { className: 'btn btn-primary' },
 	                ' Join '
+	            ),
+	            React.createElement(
+	                Link,
+	                { to: '/' },
+	                ' Join as Guest '
+	            ),
+	            React.createElement(
+	                Link,
+	                { to: '/board' },
+	                ' Go to the board '
 	            )
 	        );
 	    }
@@ -35161,7 +35327,7 @@
 	module.exports = JoinSpeaker;
 
 /***/ },
-/* 296 */
+/* 297 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -35235,7 +35401,7 @@
 	module.exports = Attendance;
 
 /***/ },
-/* 297 */
+/* 298 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35279,14 +35445,55 @@
 	module.exports = Questions;
 
 /***/ },
-/* 298 */
+/* 299 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+
+	var Slides = React.createClass({
+	    displayName: 'Slides',
+	    addSlide: function addSlide(slide, index) {
+
+	        return React.createElement(
+	            'div',
+	            { key: index, className: 'col-xs-12 col-sm-6 col-lg-3' },
+	            React.createElement(
+	                'span',
+	                { onClick: this.display.bind(null, slide) },
+	                slide.t
+	            )
+	        );
+	    },
+	    display: function display(slide) {
+	        this.props.emit('display', slide);
+	    },
+	    render: function render() {
+	        return React.createElement(
+	            'div',
+	            { id: 'slides', className: 'row' },
+	            React.createElement(
+	                'h2',
+	                null,
+	                'Slides'
+	            ),
+	            this.props.slides.map(this.addSlide)
+	        );
+	    }
+	});
+
+	module.exports = Slides;
+
+/***/ },
+/* 300 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
 	var Display = __webpack_require__(291);
-	var BarChart = __webpack_require__(299).BarChart;
+	var BarChart = __webpack_require__(301).BarChart;
 
 	var Board = React.createClass({
 	    displayName: 'Board',
@@ -35328,41 +35535,41 @@
 	module.exports = Board;
 
 /***/ },
-/* 299 */
+/* 301 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports.BarChart = __webpack_require__(300).BarChart;
-	exports.LineChart = __webpack_require__(320).LineChart;
-	exports.PieChart = __webpack_require__(333).PieChart;
-	exports.AreaChart = __webpack_require__(337).AreaChart;
-	exports.Treemap = __webpack_require__(341).Treemap;
-	exports.ScatterChart = __webpack_require__(345).ScatterChart;
-	exports.CandlestickChart = __webpack_require__(349).CandlestickChart;
+	exports.BarChart = __webpack_require__(302).BarChart;
+	exports.LineChart = __webpack_require__(322).LineChart;
+	exports.PieChart = __webpack_require__(335).PieChart;
+	exports.AreaChart = __webpack_require__(339).AreaChart;
+	exports.Treemap = __webpack_require__(343).Treemap;
+	exports.ScatterChart = __webpack_require__(347).ScatterChart;
+	exports.CandlestickChart = __webpack_require__(351).CandlestickChart;
 
 
 
 /***/ },
-/* 300 */
+/* 302 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	exports.BarChart = __webpack_require__(301);
+	exports.BarChart = __webpack_require__(303);
 
 
 /***/ },
-/* 301 */
+/* 303 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var d3 = __webpack_require__(302);
-	var DataSeries = __webpack_require__(303);
-	var common = __webpack_require__(305);
+	var d3 = __webpack_require__(304);
+	var DataSeries = __webpack_require__(305);
+	var common = __webpack_require__(307);
 	var Chart = common.Chart;
 	var XAxis = common.XAxis;
 	var YAxis = common.YAxis;
-	var mixins = __webpack_require__(318);
+	var mixins = __webpack_require__(320);
 	var CartesianChartPropsMixin = mixins.CartesianChartPropsMixin;
 
 	module.exports = React.createClass({
@@ -35456,7 +35663,7 @@
 
 
 /***/ },
-/* 302 */
+/* 304 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;!function() {
@@ -45015,14 +45222,14 @@
 	}();
 
 /***/ },
-/* 303 */
+/* 305 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var d3 = __webpack_require__(302);
-	var Bar = __webpack_require__(304);
+	var d3 = __webpack_require__(304);
+	var Bar = __webpack_require__(306);
 
 	module.exports = React.createClass({
 
@@ -45072,7 +45279,7 @@
 
 
 /***/ },
-/* 304 */
+/* 306 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45110,38 +45317,38 @@
 
 
 /***/ },
-/* 305 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	exports.XAxis = __webpack_require__(306).XAxis;
-	exports.YAxis = __webpack_require__(306).YAxis;
-	exports.Chart = __webpack_require__(312).Chart;
-	exports.LegendChart = __webpack_require__(312).LegendChart;
-	exports.Legend = __webpack_require__(316);
-	exports.Voronoi = __webpack_require__(317);
-
-
-/***/ },
-/* 306 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	exports.XAxis = __webpack_require__(307);
-	exports.YAxis = __webpack_require__(311);
-
-
-/***/ },
 /* 307 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	exports.XAxis = __webpack_require__(308).XAxis;
+	exports.YAxis = __webpack_require__(308).YAxis;
+	exports.Chart = __webpack_require__(314).Chart;
+	exports.LegendChart = __webpack_require__(314).LegendChart;
+	exports.Legend = __webpack_require__(318);
+	exports.Voronoi = __webpack_require__(319);
+
+
+/***/ },
+/* 308 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	exports.XAxis = __webpack_require__(309);
+	exports.YAxis = __webpack_require__(313);
+
+
+/***/ },
+/* 309 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var d3 = __webpack_require__(302);
-	var AxisTicks = __webpack_require__(308);
-	var AxisLine = __webpack_require__(309);
-	var Label = __webpack_require__(310);
+	var d3 = __webpack_require__(304);
+	var AxisTicks = __webpack_require__(310);
+	var AxisLine = __webpack_require__(311);
+	var Label = __webpack_require__(312);
 
 	module.exports = React.createClass({
 
@@ -45223,13 +45430,13 @@
 
 
 /***/ },
-/* 308 */
+/* 310 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var d3 = __webpack_require__(302);
+	var d3 = __webpack_require__(304);
 
 	module.exports = React.createClass({
 
@@ -45353,13 +45560,13 @@
 
 
 /***/ },
-/* 309 */
+/* 311 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var d3 = __webpack_require__(302);
+	var d3 = __webpack_require__(304);
 
 	module.exports = React.createClass({
 
@@ -45429,7 +45636,7 @@
 
 
 /***/ },
-/* 310 */
+/* 312 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45495,16 +45702,16 @@
 
 
 /***/ },
-/* 311 */
+/* 313 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var d3 = __webpack_require__(302);
-	var AxisTicks = __webpack_require__(308);
-	var AxisLine = __webpack_require__(309);
-	var Label = __webpack_require__(310);
+	var d3 = __webpack_require__(304);
+	var AxisTicks = __webpack_require__(310);
+	var AxisLine = __webpack_require__(311);
+	var Label = __webpack_require__(312);
 
 	module.exports = React.createClass({
 
@@ -45590,17 +45797,17 @@
 
 
 /***/ },
-/* 312 */
+/* 314 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	exports.BasicChart = __webpack_require__(313);
-	exports.Chart = __webpack_require__(314);
-	exports.LegendChart = __webpack_require__(315);
+	exports.BasicChart = __webpack_require__(315);
+	exports.Chart = __webpack_require__(316);
+	exports.LegendChart = __webpack_require__(317);
 
 
 /***/ },
-/* 313 */
+/* 315 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45627,14 +45834,14 @@
 
 
 /***/ },
-/* 314 */
+/* 316 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var LegendChart = __webpack_require__(315);
-	var BasicChart = __webpack_require__(313);
+	var LegendChart = __webpack_require__(317);
+	var BasicChart = __webpack_require__(315);
 
 	module.exports = React.createClass({
 
@@ -45663,13 +45870,13 @@
 
 
 /***/ },
-/* 315 */
+/* 317 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var Legend = __webpack_require__(316);
+	var Legend = __webpack_require__(318);
 
 	module.exports = React.createClass({
 
@@ -45724,13 +45931,13 @@
 
 
 /***/ },
-/* 316 */
+/* 318 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var d3 = __webpack_require__(302);
+	var d3 = __webpack_require__(304);
 
 	module.exports = React.createClass({
 
@@ -45801,13 +46008,13 @@
 
 
 /***/ },
-/* 317 */
+/* 319 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var d3 = __webpack_require__(302);
+	var d3 = __webpack_require__(304);
 
 	var Polygon = React.createClass({displayName: "Polygon",
 
@@ -45868,21 +46075,21 @@
 
 
 /***/ },
-/* 318 */
+/* 320 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	exports.CartesianChartPropsMixin = __webpack_require__(319);
+	exports.CartesianChartPropsMixin = __webpack_require__(321);
 
 
 /***/ },
-/* 319 */
+/* 321 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var d3 = __webpack_require__(302);
+	var d3 = __webpack_require__(304);
 
 	module.exports =  {
 
@@ -45938,30 +46145,30 @@
 
 
 /***/ },
-/* 320 */
+/* 322 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	exports.LineChart = __webpack_require__(321);
+	exports.LineChart = __webpack_require__(323);
 
 
 /***/ },
-/* 321 */
+/* 323 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var d3 = __webpack_require__(302);
-	var common = __webpack_require__(305);
+	var d3 = __webpack_require__(304);
+	var common = __webpack_require__(307);
 	var Chart = common.Chart;
 	var XAxis = common.XAxis;
 	var YAxis = common.YAxis;
 	var Voronoi = common.Voronoi;
-	var utils = __webpack_require__(322);
-	var immstruct = __webpack_require__(323);
-	var DataSeries = __webpack_require__(330);
-	var mixins = __webpack_require__(318);
+	var utils = __webpack_require__(324);
+	var immstruct = __webpack_require__(325);
+	var DataSeries = __webpack_require__(332);
+	var mixins = __webpack_require__(320);
 	var CartesianChartPropsMixin = mixins.CartesianChartPropsMixin;
 
 
@@ -46103,10 +46310,10 @@
 
 
 /***/ },
-/* 322 */
+/* 324 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var d3 = __webpack_require__(302);
+	var d3 = __webpack_require__(304);
 
 
 	exports.calculateScales = function(chartWidth, chartHeight, xValues, yValues)  {
@@ -46254,11 +46461,11 @@
 
 
 /***/ },
-/* 323 */
+/* 325 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var Structure = __webpack_require__(324);
+	var Structure = __webpack_require__(326);
 
 	function Immstruct () {
 	  if (!(this instanceof Immstruct)) {
@@ -46334,16 +46541,16 @@
 	}
 
 /***/ },
-/* 324 */
+/* 326 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Immutable = __webpack_require__(325);
-	var Cursor = __webpack_require__(326);
-	var EventEmitter = __webpack_require__(327).EventEmitter;
-	var inherits = __webpack_require__(328);
-	var utils = __webpack_require__(329);
+	var Immutable = __webpack_require__(327);
+	var Cursor = __webpack_require__(328);
+	var EventEmitter = __webpack_require__(329).EventEmitter;
+	var inherits = __webpack_require__(330);
+	var utils = __webpack_require__(331);
 
 	/************************************
 	 *
@@ -46672,7 +46879,7 @@
 
 
 /***/ },
-/* 325 */
+/* 327 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -51656,7 +51863,7 @@
 	}));
 
 /***/ },
-/* 326 */
+/* 328 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -51676,7 +51883,7 @@
 	 * If you wish to use it in the browser, please check out Browserify or WebPack!
 	 */
 
-	var Immutable = __webpack_require__(325);
+	var Immutable = __webpack_require__(327);
 	var Iterable = Immutable.Iterable;
 	var Iterator = Iterable.Iterator;
 	var Seq = Immutable.Seq;
@@ -52005,7 +52212,7 @@
 
 
 /***/ },
-/* 327 */
+/* 329 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -52240,7 +52447,7 @@
 
 
 /***/ },
-/* 328 */
+/* 330 */
 /***/ function(module, exports) {
 
 	if (typeof Object.create === 'function') {
@@ -52269,7 +52476,7 @@
 
 
 /***/ },
-/* 329 */
+/* 331 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -52281,15 +52488,15 @@
 
 
 /***/ },
-/* 330 */
+/* 332 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var d3 = __webpack_require__(302);
-	var Line = __webpack_require__(331);
-	var Circle = __webpack_require__(332);
+	var d3 = __webpack_require__(304);
+	var Line = __webpack_require__(333);
+	var Circle = __webpack_require__(334);
 
 
 	module.exports = React.createClass({
@@ -52421,7 +52628,7 @@
 
 
 /***/ },
-/* 331 */
+/* 333 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52506,7 +52713,7 @@
 
 
 /***/ },
-/* 332 */
+/* 334 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52591,22 +52798,22 @@
 
 
 /***/ },
-/* 333 */
+/* 335 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	exports.PieChart = __webpack_require__(334);
+	exports.PieChart = __webpack_require__(336);
 
 
 /***/ },
-/* 334 */
+/* 336 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var DataSeries = __webpack_require__(335);
-	var Chart = __webpack_require__(305).Chart;
+	var DataSeries = __webpack_require__(337);
+	var Chart = __webpack_require__(307).Chart;
 
 
 	module.exports = React.createClass({
@@ -52664,14 +52871,14 @@
 
 
 /***/ },
-/* 335 */
+/* 337 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var d3 = __webpack_require__(302);
-	var Arc = __webpack_require__(336);
+	var d3 = __webpack_require__(304);
+	var Arc = __webpack_require__(338);
 
 
 	module.exports = React.createClass({
@@ -52729,13 +52936,13 @@
 
 
 /***/ },
-/* 336 */
+/* 338 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var d3 = __webpack_require__(302);
+	var d3 = __webpack_require__(304);
 
 
 	module.exports = React.createClass({
@@ -52824,27 +53031,27 @@
 
 
 /***/ },
-/* 337 */
+/* 339 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	exports.AreaChart = __webpack_require__(338);
+	exports.AreaChart = __webpack_require__(340);
 
 
 /***/ },
-/* 338 */
+/* 340 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var d3 = __webpack_require__(302);
-	var DataSeries = __webpack_require__(339);
-	var common = __webpack_require__(305);
+	var d3 = __webpack_require__(304);
+	var DataSeries = __webpack_require__(341);
+	var common = __webpack_require__(307);
 	var Chart = common.Chart;
 	var XAxis = common.XAxis;
 	var YAxis = common.YAxis;
-	var mixins = __webpack_require__(318);
+	var mixins = __webpack_require__(320);
 	var CartesianChartPropsMixin = mixins.CartesianChartPropsMixin;
 
 
@@ -52988,14 +53195,14 @@
 
 
 /***/ },
-/* 339 */
+/* 341 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var d3 = __webpack_require__(302);
-	var Area = __webpack_require__(340);
+	var d3 = __webpack_require__(304);
+	var Area = __webpack_require__(342);
 
 	module.exports = React.createClass({
 
@@ -53021,7 +53228,7 @@
 
 
 /***/ },
-/* 340 */
+/* 342 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -53058,22 +53265,22 @@
 
 
 /***/ },
-/* 341 */
+/* 343 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	exports.Treemap = __webpack_require__(342);
+	exports.Treemap = __webpack_require__(344);
 
 
 /***/ },
-/* 342 */
+/* 344 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var Chart = __webpack_require__(305).Chart;
-	var DataSeries = __webpack_require__(343);
+	var Chart = __webpack_require__(307).Chart;
+	var DataSeries = __webpack_require__(345);
 
 	module.exports = React.createClass({
 
@@ -53131,14 +53338,14 @@
 
 
 /***/ },
-/* 343 */
+/* 345 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var d3 = __webpack_require__(302);
-	var Cell = __webpack_require__(344);
+	var d3 = __webpack_require__(304);
+	var Cell = __webpack_require__(346);
 
 
 	module.exports = React.createClass({
@@ -53202,13 +53409,13 @@
 
 
 /***/ },
-/* 344 */
+/* 346 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var d3 = __webpack_require__(302);
+	var d3 = __webpack_require__(304);
 
 
 	module.exports = React.createClass({
@@ -53258,30 +53465,30 @@
 
 
 /***/ },
-/* 345 */
+/* 347 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	exports.ScatterChart = __webpack_require__(346);
+	exports.ScatterChart = __webpack_require__(348);
 
 
 /***/ },
-/* 346 */
+/* 348 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var d3 = __webpack_require__(302);
-	var common = __webpack_require__(305);
+	var d3 = __webpack_require__(304);
+	var common = __webpack_require__(307);
 	var Chart = common.Chart;
 	var XAxis = common.XAxis;
 	var YAxis = common.YAxis;
 	var Voronoi = common.Voronoi;
-	var utils = __webpack_require__(322);
-	var immstruct = __webpack_require__(323);
-	var DataSeries = __webpack_require__(347);
-	var CartesianChartPropsMixin = __webpack_require__(318).CartesianChartPropsMixin;
+	var utils = __webpack_require__(324);
+	var immstruct = __webpack_require__(325);
+	var DataSeries = __webpack_require__(349);
+	var CartesianChartPropsMixin = __webpack_require__(320).CartesianChartPropsMixin;
 
 	module.exports = React.createClass({
 
@@ -53432,13 +53639,13 @@
 
 
 /***/ },
-/* 347 */
+/* 349 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var Circle = __webpack_require__(348);
+	var Circle = __webpack_require__(350);
 
 
 	module.exports = React.createClass({
@@ -53514,14 +53721,14 @@
 
 
 /***/ },
-/* 348 */
+/* 350 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var d3 = __webpack_require__(302);
-	var utils = __webpack_require__(322);
+	var d3 = __webpack_require__(304);
+	var utils = __webpack_require__(324);
 
 	module.exports = React.createClass({
 
@@ -53603,25 +53810,25 @@
 
 
 /***/ },
-/* 349 */
+/* 351 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	exports.CandlestickChart = __webpack_require__(350);
+	exports.CandlestickChart = __webpack_require__(352);
 
 
 /***/ },
-/* 350 */
+/* 352 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var d3 = __webpack_require__(302);
-	var immstruct = __webpack_require__(323);
-	var utils = __webpack_require__(322);
-	var DataSeries = __webpack_require__(351);
-	var common = __webpack_require__(305);
+	var d3 = __webpack_require__(304);
+	var immstruct = __webpack_require__(325);
+	var utils = __webpack_require__(324);
+	var DataSeries = __webpack_require__(353);
+	var common = __webpack_require__(307);
 	var Chart = common.Chart;
 	var XAxis = common.XAxis;
 	var YAxis = common.YAxis;
@@ -53768,16 +53975,16 @@
 
 
 /***/ },
-/* 351 */
+/* 353 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var d3 = __webpack_require__(302);
-	var utils = __webpack_require__(322);
-	var Candle = __webpack_require__(352);
-	var Wick = __webpack_require__(353);
+	var d3 = __webpack_require__(304);
+	var utils = __webpack_require__(324);
+	var Candle = __webpack_require__(354);
+	var Wick = __webpack_require__(355);
 
 
 	module.exports = React.createClass({
@@ -53859,13 +54066,13 @@
 
 
 /***/ },
-/* 352 */
+/* 354 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var utils = __webpack_require__(322);
+	var utils = __webpack_require__(324);
 
 
 	module.exports = React.createClass({
@@ -53942,7 +54149,7 @@
 
 
 /***/ },
-/* 353 */
+/* 355 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -53986,7 +54193,7 @@
 
 
 /***/ },
-/* 354 */
+/* 356 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
