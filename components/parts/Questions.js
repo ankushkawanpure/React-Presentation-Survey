@@ -20,10 +20,12 @@ var Questions = React.createClass({
 
     render() {
         return (
-            <div id = "questions" className="row">
+            <div id = "questions" className="col-xs-12 col-md-12">
                 <h2>Question</h2>
-                {this.props.questions.map(this.addquestion)}
-
+                <div className="line"></div>
+                <div className="row">
+                    {this.props.questions.map(this.addquestion)}
+                </div>
             </div>
         );
     }

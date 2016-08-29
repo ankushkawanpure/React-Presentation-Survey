@@ -11,11 +11,11 @@ var Speaker = React.createClass({
 
     render () {
         return(
-           <div>
-                <Display if={this.props.status === 'connected'}>
+           <div className="row" id ="speakerpanal">
+
+               <Display if={this.props.status === 'connected'}>
 
                     <Display if={this.props.member.name && this.props.member.type === 'speaker'}>
-
 
                         <Questions questions={this.props.questions} emit={this.props.emit}/>
                         <Slides slides = {this.props.slides} emit={this.props.emit}/>

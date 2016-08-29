@@ -35233,7 +35233,7 @@
 	    render: function render() {
 	        return React.createElement(
 	            'div',
-	            null,
+	            { className: 'row', id: 'speakerpanal' },
 	            React.createElement(
 	                Display,
 	                { 'if': this.props.status === 'connected' },
@@ -35359,7 +35359,7 @@
 	    render: function render() {
 	        return React.createElement(
 	            "div",
-	            null,
+	            { className: "col-xs-12 col-md-12", id: "attendance" },
 	            React.createElement(
 	                "h2",
 	                null,
@@ -35367,9 +35367,10 @@
 	                this.props.audience.length,
 	                " Members "
 	            ),
+	            React.createElement("div", { className: "line" }),
 	            React.createElement(
 	                "table",
-	                { className: "table table-striped" },
+	                { className: "table" },
 	                React.createElement(
 	                    "thead",
 	                    null,
@@ -35384,7 +35385,7 @@
 	                        React.createElement(
 	                            "th",
 	                            null,
-	                            " Socket ID "
+	                            " Member ID "
 	                        )
 	                    )
 	                ),
@@ -35431,13 +35432,18 @@
 	    render: function render() {
 	        return React.createElement(
 	            'div',
-	            { id: 'questions', className: 'row' },
+	            { id: 'questions', className: 'col-xs-12 col-md-12' },
 	            React.createElement(
 	                'h2',
 	                null,
 	                'Question'
 	            ),
-	            this.props.questions.map(this.addquestion)
+	            React.createElement('div', { className: 'line' }),
+	            React.createElement(
+	                'div',
+	                { className: 'row' },
+	                this.props.questions.map(this.addquestion)
+	            )
 	        );
 	    }
 	});
@@ -35472,13 +35478,18 @@
 	    render: function render() {
 	        return React.createElement(
 	            'div',
-	            { id: 'slides', className: 'row' },
+	            { id: 'slides', className: 'col-xs-12 col-md-12' },
 	            React.createElement(
 	                'h2',
 	                null,
 	                'Slides'
 	            ),
-	            this.props.slides.map(this.addSlide)
+	            React.createElement('div', { className: 'line' }),
+	            React.createElement(
+	                'div',
+	                { className: 'row' },
+	                this.props.slides.map(this.addSlide)
+	            )
 	        );
 	    }
 	});

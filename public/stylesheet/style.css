@@ -120,30 +120,43 @@ form label {
     margin: 1em 0 0;
 }
 
-#questions>div>span {
-    padding: .5em;
+#questions>div>div>span {
+    padding: 10px;
     margin: .5em;
     display: block;
     cursor: pointer;
-    border: 2px solid green;
+    border: 2px solid #204656;
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
+    border-radius:10px;
+
 }
 
-#questions>div>span:hover {
-    background-color: yellow;
+#questions>div>div>span:hover {
+    background-color: #355664;
 }
 
+#slides>div>div {
+    padding : 20px;
+}
 
+#questions>div>div {
+    padding : 20px;
+}
 
-#slides>div>span {
-    padding: .5em;
+#slides>div>div>span {
+    padding: 10px;
     margin: .5em;
     display: block;
     cursor: pointer;
-    border: 2px solid green;
+    border: 2px solid #204656;
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
+    border-radius:10px;
 }
 
-#slides>div>span:hover {
-    background-color: yellow;
+#slides>div>div>span:hover {
+    background-color: #355664;
 }
 
 #currentQuestion button {
@@ -255,7 +268,7 @@ form label {
     background: #15242a;
 }
 .audiance {
-    margin-top: 50px;
+    margin-top: 20px;
 
     background: #507B8F;
     -moz-border-radius:10px;
@@ -281,3 +294,29 @@ form label {
     border-radius:10px;
     padding: 15px;
 }
+
+#speakerpanal {
+    margin-top: 50px;
+
+    background: #507B8F;
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
+    border-radius:10px;
+    padding-bottom: 30px;
+}
+
+#questions .line,
+#slides .line,
+#attendance .line{
+    background:#466C7D;
+    border-bottom-color:#4E778A;
+    display: block;
+    height: 2px;
+
+}
+
+a {
+    color: #204656;
+}
+
+

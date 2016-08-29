@@ -17,13 +17,14 @@ var Attendance = React.createClass({
 
     render() {
         return (
-            <div>
+            <div className="col-xs-12 col-md-12" id="attendance">
                 <h2> Attendance - {this.props.audience.length} Members </h2>
-                    <table className="table table-striped">
+                    <div className="line"></div>
+                    <table className="table" >
                         <thead>
                             <tr>
                                 <th> Audience Member </th>
-                                <th> Socket ID </th>
+                                <th> Member ID </th>
                             </tr>
                         </thead>
                         <tbody>

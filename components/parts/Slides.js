@@ -19,10 +19,12 @@ var Slides = React.createClass( {
 
     render() {
         return (
-            <div id = "slides" className="row">
+            <div id = "slides" className="col-xs-12 col-md-12">
                 <h2>Slides</h2>
-                {this.props.slides.map(this.addSlide)}
-
+                <div className="line"></div>
+                <div className="row">
+                    {this.props.slides.map(this.addSlide)}
+                </div>
             </div>
         )
     }
