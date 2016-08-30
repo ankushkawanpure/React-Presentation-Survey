@@ -1,6 +1,6 @@
 module.exports =  [
     {
-        "t": "What is Java Script",
+        "t": "What is Java Script ?",
         "a": "JavaScript is client-side scripting language",
         "b": "JavaScript code can be inserted into HTML pages",
         "c": "Enhanced the dynamics and interactive feature of the website",
@@ -8,24 +8,26 @@ module.exports =  [
         "e": "Object based, uses built in extensible objects"
     },
     {
-        "t": "How much money would you like to make?",
-        "a": "no money",
-        "b": "some money",
-        "c": "most of the money",
-        "d": "all of the money"
+        "t": "What is Java Script ?",
+        "a": "JavaScript is used in Web site development",
+        "b": "check or modify the contents of forms",
+        "c": "change images",
+        "d": "open new windows and write dynamic page content.",
+        "e": "to make DHTML by CSS"
     },
     {
-        "t": "How much money would you like to put down?",
-        "a": "more money than I have",
-        "b": "all of my money",
-        "c": "some of my money",
-        "d": "no money at all"
+        "t": "Java Script Syntax Issue",
+        "a": "JavaScript commands and names are case sensitive.",
+        "b": "JavaScript command lines end with a semicolon",
+        "c": "but in some situations, the semicolon is optiona",
+        "d": "semicolons are useful to make your code easier to follow and interpret"
     },
     {
-        "t": "Who do you want to be your boss?",
-        "a": "someone bossy",
-        "b": "someone who knows what they are doing",
-        "c": "I'm my own boss",
-        "d": "no boss at all"
+        "t": "Types of Variables",
+        "a": "JavaScript supports four different types of  variable: ",
+        "b": "Numeric variables can be a number, such as 13, 22.5, or -3.14159",
+        "c": "string variables is any group of characters",
+        "d": "Boolean variables are variables that accept one of two values, either true or false",
+        "e": "null variables is a variable that has no value at all"
     }
 ];
