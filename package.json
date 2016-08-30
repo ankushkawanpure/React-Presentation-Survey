@@ -22,8 +22,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node app-server.js",
-    "postinstall": "webpack -p --config webpack.config.js"
+    "prestart": "webpack",
+    "start": "node app-server.js"
   },
   "author": "Ankush Kawanpure",
   "license": "MIT"
