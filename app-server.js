@@ -23,7 +23,7 @@ var results = {
 };
 
 
-var server = app.listen(80);
+var server = app.listen(3000);
 
 //import
 var io = require('socket.io').listen(server);
