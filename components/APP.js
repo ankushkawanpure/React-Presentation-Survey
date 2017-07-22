@@ -1,9 +1,7 @@
 var React = require('react');
 var Router = require('react-router');
 
-
 var io = require('socket.io-client');
-
 var Header = require('./parts/Header');
 
 var APP = React.createClass({
@@ -27,7 +25,8 @@ var APP = React.createClass({
 
     componentWillMount() {
 
-        this.socket = io('http://ankushkawanpure.com:3000');
+        this.socket = io('https://grouppresentation.herokuapp.com/', { autoConnect: true});
+        // this.socket = io('http://ankushkawanpure.com:3000');
         this.socket.on('connect', this.connect);
         this.socket.on('disconnect', this.disconnect);
         this.socket.on('welcome', this.updateState);

@@ -6,6 +6,14 @@ var app = express();
 app.use(express.static('./public'));
 app.use(express.static('./node_modules/bootstrap/dist'));
 
+//
+// var express = require('express'),
+//     app = express(),
+//     server = require('http').createServer(app),
+//     io = require('socket.io').listen(server),
+//
+//     server.listen(process.env.PORT || 3000);
+
 
 var connections = [];
 var title = 'Presentation yet to start';
@@ -23,7 +31,7 @@ var results = {
 };
 
 
-var server = app.listen(3000);
+var server = app.listen(process.env.PORT || 3000);
 
 //import
 var io = require('socket.io').listen(server);
